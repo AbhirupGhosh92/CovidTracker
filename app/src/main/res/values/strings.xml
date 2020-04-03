@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CovidTracker</string>
+    <string name="tracker_text">Covid-19\nTracker</string>
+
+    <string name="total_text">Confirmed</string>
+    <string name="recov_text">Recovered</string>
+    <string name="dead_text">Deaths</string>
+    <string name="active_text">Active</string>
+    <string name="refresh_text">Refresh Data</string>
+</resources>

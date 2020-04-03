@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="baseFragmenntViewModel"
+            type="com.splash.covid.tracker.viewmodels.RealTimeDataFragmentViewModel" />
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/cl_main"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:id = "@+id/tl_main"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabPaddingBottom="2dp"
+            app:tabPaddingStart="5dp"
+            app:tabPaddingEnd="5dp"
+            app:tabMode="fixed"
+            app:tabIndicatorHeight="3dp"
+            />
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</layout>

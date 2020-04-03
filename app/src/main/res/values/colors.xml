@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="cofirmedColour">#ff073a</color>
+    <color name="activeColour">#007bff</color>
+    <color name="recoveredColour">#28a745</color>
+    <color name="deadColour">#6c757d</color>
+    <color name="green">#008000</color>
+    <color name="darker_gray">#aaaaaa</color>
+    <color name="red">#ff0000</color>
+    <color name="baseColor">#7926AD</color>
+    <color name="off_white">#F6F6F6</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="grey">#d7d7d7</color>
+    <color name="background_gray">#f7f7f7</color>
+    <color name="light_gray">#F4F8FB</color>
+    <color name="dark_grey">#7D7D7D</color>
+
+
+    <color name="red_color">#ff7f7f</color>
+    <color name="blue_color">#1bb3f5</color>
+    <color name="dark_blue">#007FFF</color>
+    <color name="light_blue">#D5E5F5</color>
+
+
+    <color name="light_base_color">#F8F7FF</color>
+    <color name="backdrop_circle_color">#0D7926AD</color>
+    <color name="new_light_base_color">#D8C3E4</color>
+    <color name="transparent">#00FFFFFF</color>
+
+</resources>
