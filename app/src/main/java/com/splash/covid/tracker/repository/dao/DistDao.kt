@@ -10,7 +10,7 @@ import com.splash.covid.tracker.repository.entity.GraphEntity
 interface DistDao {
 
     @Query("select response from covid_dist where id = :id")
-    fun getDistObject( id : String = Constants.GRAPH): LiveData<String>
+    fun getDistObject( id : String = Constants.DIST): LiveData<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDistEntity(vararg response: DistrictEntity)

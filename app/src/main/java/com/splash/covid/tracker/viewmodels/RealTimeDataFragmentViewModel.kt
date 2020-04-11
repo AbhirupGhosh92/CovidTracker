@@ -25,20 +25,46 @@ class RealTimeDataFragmentViewModel : ViewModel() {
         }
     }
 
-    fun getDistDataFromCache(context: Context) :  MutableLiveData<List<DistrictModel>>
+    fun getDistDataFromCache(context: Context) :  MutableLiveData<Map<String,List<DistrictModel>>>
     {
-        var liveData = MutableLiveData<List<DistrictModel>>()
+        var liveData = MutableLiveData<Map<String,List<DistrictModel>>>()
+        var distmap = HashMap<String,List<DistrictModel>>()
 
         Repository.getDistFromCache(context).observe(context as LifecycleOwner, Observer {
             try {
                 if(it!=null)
                 {
-                    Log.d("Response",it.toString())
-
-                //    var state =  Gson().fromJson<List<DistrictModel>?>(it.toString(),object : TypeToken<List<StateModel>?>(){}.type)
+                   var dist = JSONObject(it.toString())
 
 
-                    liveData.value = null
+                    for(state in dist.keys())
+                    {
+
+                        var distList =ArrayList<DistrictModel>()
+
+                        try {
+                            var distJson  = JSONObject(dist[state].toString()).getJSONObject("districtData")
+
+                            for(dist in distJson.keys())
+                            {
+                                var item = DistrictModel()
+                                item.confirmed =  (distJson[dist] as JSONObject).get("confirmed").toString()
+                                item.name = dist
+                                item.lastupdatedtime =  (distJson[dist] as JSONObject).get("lastupdatedtime").toString()
+                                item.delta = (distJson[dist] as JSONObject).getJSONObject("delta").get("confirmed").toString()
+                                distList.add(item)
+                            }
+                            distmap.put(state,distList)
+                        }
+                        catch (e : Exception)
+                        {
+                            e.printStackTrace()
+                        }
+                    }
+
+
+
+                   liveData.value = distmap
                 }
             }
             catch (e : Exception)

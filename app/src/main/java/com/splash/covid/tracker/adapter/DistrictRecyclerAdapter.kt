@@ -11,7 +11,7 @@ import com.splash.covid.tracker.repository.models.DistrictModel
 import com.splash.covid.tracker.repository.models.StateModel
 import com.splash.covid.tracker.viewholders.ItemViewHolder
 
-class DistrictRecyclerAdapter(var districtList: ArrayList<DistrictModel> = ArrayList()): RecyclerView.Adapter<ItemViewHolder>() {
+class DistrictRecyclerAdapter(var districtList: List<DistrictModel> = ArrayList()): RecyclerView.Adapter<ItemViewHolder>() {
 
     private lateinit var context : Context
 
@@ -26,6 +26,15 @@ class DistrictRecyclerAdapter(var districtList: ArrayList<DistrictModel> = Array
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+
+
+        if(districtList.isNullOrEmpty())
+            holder.dataBinding.llSublist.visibility = View.GONE
+        else
+            holder.dataBinding.llSublist.visibility = View.VISIBLE
+
+        holder.dataBinding.distText.visibility = View.GONE
+        holder.dataBinding.count.visibility = View.GONE
 
         holder.dataBinding.deathCount.text = districtList[position].confirmed
         holder.dataBinding.areaText.text = districtList[position].name

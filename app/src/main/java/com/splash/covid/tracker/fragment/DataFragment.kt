@@ -16,6 +16,7 @@ import com.splash.covid.tracker.R
 import com.splash.covid.tracker.activity.DashboardActivity
 import com.splash.covid.tracker.adapter.StateRecyclerAdapter
 import com.splash.covid.tracker.databinding.RealTimeDataFragmentBinding
+import com.splash.covid.tracker.repository.models.DistrictModel
 import com.splash.covid.tracker.repository.models.StateModel
 import com.splash.covid.tracker.viewmodels.RealTimeDataFragmentViewModel
 
@@ -25,6 +26,7 @@ class DataFragment: Fragment(), View.OnClickListener {
     private lateinit var realTimeDataFragmentBinding: RealTimeDataFragmentBinding
     private lateinit var viewModel : RealTimeDataFragmentViewModel
     private var stateItemList = ArrayList<StateModel>()
+    private var distItemList = HashMap<String,List<DistrictModel>>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         realTimeDataFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.real_time_data_fragment, container, false)
@@ -45,13 +47,19 @@ class DataFragment: Fragment(), View.OnClickListener {
 
         viewModel.refreshData(requireContext())
 
-        viewModel.getStateWiseFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
+        viewModel.getStateWiseFromCache(requireContext()).observe(viewLifecycleOwner, Observer {stateList ->
 
-            Log.d("Response",it.toString())
-            stateItemList.clear()
-            stateItemList.addAll(it.drop(1))
-            realTimeDataFragmentBinding.stateRecycler.adapter?.notifyDataSetChanged()
 
+            viewModel.getDistDataFromCache(requireContext()).observe(viewLifecycleOwner, Observer {distList ->
+
+                Log.d("Response",stateList.toString())
+                stateItemList.clear()
+                stateItemList.addAll(stateList.drop(1))
+                distItemList.clear()
+                distItemList.putAll(distList)
+                realTimeDataFragmentBinding.stateRecycler.adapter?.notifyDataSetChanged()
+
+            })
         })
 
         viewModel.getTotalValuesFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
@@ -61,15 +69,11 @@ class DataFragment: Fragment(), View.OnClickListener {
             realTimeDataFragmentBinding.topMainCount.deadCount.text = it.deaths
             realTimeDataFragmentBinding.topMainCount.activeCount.text = it.active
         })
-
-        viewModel.getDistDataFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
-            Log.d("Response",it.toString())
-        })
     }
 
     private fun initViews() {
 
-        realTimeDataFragmentBinding.stateRecycler.adapter = StateRecyclerAdapter(stateItemList)
+        realTimeDataFragmentBinding.stateRecycler.adapter = StateRecyclerAdapter(stateItemList,distItemList)
         realTimeDataFragmentBinding.stateRecycler.layoutManager = LinearLayoutManager(requireContext())
         realTimeDataFragmentBinding.stateRecycler.itemAnimator = DefaultItemAnimator()
     }
