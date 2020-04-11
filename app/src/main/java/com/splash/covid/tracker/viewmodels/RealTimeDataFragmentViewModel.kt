@@ -3,6 +3,8 @@ package com.splash.covid.tracker.viewmodels
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.splash.covid.tracker.repository.Repository
 import com.splash.covid.tracker.repository.models.*
 import org.json.JSONArray
@@ -14,13 +16,38 @@ class RealTimeDataFragmentViewModel : ViewModel() {
     fun refreshData(context: Context)
     {
         try {
-            Repository.getDataFromServer(context)
+            Repository.getDistFromServer(context)
             Repository.getGraphDataFromServer(context)
         }
         catch (e : Exception)
         {
             e.printStackTrace()
         }
+    }
+
+    fun getDistDataFromCache(context: Context) :  MutableLiveData<List<DistrictModel>>
+    {
+        var liveData = MutableLiveData<List<DistrictModel>>()
+
+        Repository.getDistFromCache(context).observe(context as LifecycleOwner, Observer {
+            try {
+                if(it!=null)
+                {
+                    Log.d("Response",it.toString())
+
+                //    var state =  Gson().fromJson<List<DistrictModel>?>(it.toString(),object : TypeToken<List<StateModel>?>(){}.type)
+
+
+                    liveData.value = null
+                }
+            }
+            catch (e : Exception)
+            {
+                e.printStackTrace()
+            }
+        })
+
+        return liveData
     }
 
     fun getStateWiseFromCache(context: Context) : LiveData<List<StateModel>>
@@ -33,13 +60,10 @@ class RealTimeDataFragmentViewModel : ViewModel() {
                 {
                     Log.d("Response",it.toString())
 
-                    var stateList = ArrayList<StateModel>()
-                    var state = it.getJSONObject("state_wise")
-                    state.keys().forEach {
-                        stateList.add(stateParser(state[it] as JSONObject))
-                    }
+                    var state =  Gson().fromJson<List<StateModel>?>(it.toString(),object : TypeToken<List<StateModel>?>(){}.type)
 
-                    liveData.value = stateList
+
+                    liveData.value = state
                 }
             }
             catch (e : Exception)
@@ -52,70 +76,20 @@ class RealTimeDataFragmentViewModel : ViewModel() {
     }
 
 
-    fun getKeyValuesFromCache(context: Context) : LiveData<KeyValuesModel>
+    fun getTotalValuesFromCache(context: Context) : LiveData<StateModel>
     {
-        var liveData = MutableLiveData<KeyValuesModel>()
-
-        Repository.getResponseFromCache(context).observe(context as LifecycleOwner, Observer {
-            if(it!=null && it.has("key_values"))
-            {
-                Log.d("Response",it.toString())
-
-                var data = it.getJSONArray("key_values")
-
-                try {
-                    liveData.value =
-                        KeyValuesModel(
-                            (data[0] as JSONObject).get("confirmeddelta").toString(),
-                            (data[0] as JSONObject).get("counterforautotimeupdate").toString(),
-                            (data[0] as JSONObject).get("deceaseddelta").toString(),
-                            (data[0] as JSONObject).get("lastupdatedtime").toString(),
-                            (data[0] as JSONObject).get("recovereddelta").toString(),
-                            (data[0] as JSONObject).get("statesdelta").toString()
-                        )
-                }
-                catch (e : Exception)
-                {
-                    e.printStackTrace()
-                }
-
-
-            }
-        })
-
-        return liveData
-    }
-
-    fun getTotalValuesFromCache(context: Context) : LiveData<TotalValuesModel>
-    {
-        var liveData = MutableLiveData<TotalValuesModel>()
+        var liveData = MutableLiveData<StateModel>()
 
         Repository.getResponseFromCache(context).observe(context as LifecycleOwner, Observer {
             try {
-            if(it!=null && it.has("total_values"))
+            if(it!=null)
             {
 
-                Log.d("Response",it.toString())
+                Log.d("Response",it.getString(0))
 
-                var data = it.getJSONObject("total_values")
-                var delta = data.getJSONObject("delta")
-                var deltaModel = DeltaModel(
-                    (delta as JSONObject).get("active").toString(),
-                    (delta as JSONObject).get("confirmed").toString(),
-                    (delta as JSONObject).get("deaths").toString(),
-                    (data as JSONObject).get("recovered").toString()
-                )
 
-                    liveData.value =
-                        TotalValuesModel(
-                            (data as JSONObject).get("active").toString(),
-                            (data as JSONObject).get("confirmed").toString(),
-                            (data as JSONObject).get("deaths").toString(),
-                            deltaModel,
-                            (data as JSONObject).get("lastupdatedtime").toString(),
-                            (data as JSONObject).get("recovered").toString(),
-                            (data as JSONObject).get("state").toString()
-                        )
+                var total = Gson().fromJson<StateModel>(it[0].toString(),StateModel::class.java)
+                liveData.value=total
                 }
             }
             catch (e : Exception)
@@ -129,7 +103,7 @@ class RealTimeDataFragmentViewModel : ViewModel() {
 
     private fun stateParser(jsonObject: JSONObject) : StateModel
     {
-        var delta = deltaParser(jsonObject)
+        var delta = DeltaModel()
         var district = districtParser(jsonObject)
 
         var active : String = "0"
@@ -166,16 +140,16 @@ class RealTimeDataFragmentViewModel : ViewModel() {
             lastupdatedtime,
             recovered,
             state,
-            district
+            district!!
         )
     }
 
     private fun districtParser(jsonObject: JSONObject) : List<DistrictModel>?
     {
         var districtModel : ArrayList<DistrictModel>? = ArrayList()
-        if(jsonObject.has("district"))
+        if(jsonObject.has("districtData"))
         {
-            var dist = jsonObject.getJSONObject("district")
+            var dist = jsonObject.getJSONObject("districtData")
 
             dist.keys().forEach {
 
@@ -183,28 +157,12 @@ class RealTimeDataFragmentViewModel : ViewModel() {
                 districtModel?.add(DistrictModel(
                     it,
                     dist.getJSONObject(it).getString("confirmed"),
-                    dist.getJSONObject(it).getString("lastupdatedtime")
+                    dist.getJSONObject(it).getString("lastupdatedtime"),
+                    dist.getJSONObject(it).getJSONObject("delta").getString("confirmed")
                 ))
             }
         }
 
         return districtModel
-    }
-
-    private fun deltaParser(jsonObject: JSONObject) : DeltaModel?
-    {
-        var deltaModel : DeltaModel? = null
-        if(jsonObject.has("delta"))
-        {
-            var delta = jsonObject.getJSONObject("delta")
-            deltaModel = DeltaModel(
-                delta.getString("active"),
-                delta.getString("confirmed"),
-                delta.getString("deaths"),
-                delta.getString("recovered")
-            )
-        }
-
-        return deltaModel
     }
 }

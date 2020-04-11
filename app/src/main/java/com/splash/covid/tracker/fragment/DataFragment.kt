@@ -48,21 +48,22 @@ class DataFragment: Fragment(), View.OnClickListener {
         viewModel.getStateWiseFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
 
             Log.d("Response",it.toString())
-
             stateItemList.clear()
-            stateItemList.addAll(it)
+            stateItemList.addAll(it.drop(1))
             realTimeDataFragmentBinding.stateRecycler.adapter?.notifyDataSetChanged()
 
         })
 
         viewModel.getTotalValuesFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
-
             Log.d("Response",it.toString())
-
             realTimeDataFragmentBinding.topMainCount.totalCount.text = it.confirmed
             realTimeDataFragmentBinding.topMainCount.recovCount.text = it.recovered
             realTimeDataFragmentBinding.topMainCount.deadCount.text = it.deaths
             realTimeDataFragmentBinding.topMainCount.activeCount.text = it.active
+        })
+
+        viewModel.getDistDataFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
+            Log.d("Response",it.toString())
         })
     }
 

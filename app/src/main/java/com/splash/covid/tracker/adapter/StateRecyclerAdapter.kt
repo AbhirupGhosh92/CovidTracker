@@ -45,7 +45,8 @@ class StateRecyclerAdapter(var stateListe: ArrayList<StateModel> = ArrayList()) 
             holder.dataBinding.activeCount.text = stateListe[position].active
 
             var dist : ArrayList<DistrictModel> = ArrayList()
-            dist.addAll(stateListe[position].district!!)
+            if(stateListe[position].district !=null)
+                dist.addAll(stateListe[position].district!!)
 
             holder.dataBinding.distRecycler.adapter = DistrictRecyclerAdapter(dist)
             holder.dataBinding.distRecycler.layoutManager = LinearLayoutManager(context)

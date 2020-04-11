@@ -24,11 +24,10 @@ class GraphDataFragmentViewModel : ViewModel() {
         var liveData = MutableLiveData<List<GraphItem>>()
 
         Repository.getGraphFromCache(context).observe(context as LifecycleOwner, Observer {
-            if(it?.has("cases_time_series")!!)
+            if(it != null)
             {
-                var jsonArray = it.getJSONArray("cases_time_series")
 
-                liveData.value = Gson().fromJson(jsonArray.toString(),object : TypeToken<List<GraphItem>>(){}.type)
+                liveData.value = Gson().fromJson(it.toString(),object : TypeToken<List<GraphItem>>(){}.type)
             }
         })
 

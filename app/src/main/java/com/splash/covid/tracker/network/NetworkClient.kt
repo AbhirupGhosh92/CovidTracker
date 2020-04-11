@@ -13,15 +13,13 @@ import okhttp3.Response
 object NetworkClient : CoroutineScope by MainScope() {
     var client = OkHttpClient()
 
-    fun getDashboardData() : LiveData<String>
+    fun getDistrictData() : LiveData<String>
     {
         var resp = MutableLiveData<String>()
 
         var request: Request = Request.Builder()
             .url(Constants.url)
             .get()
-            .addHeader("x-rapidapi-host", "corona-virus-world-and-india-data.p.rapidapi.com")
-            .addHeader("x-rapidapi-key", "db2afefa8bmsheacaa8cb2310682p1e8d26jsn5db42b77f92a")
             .build()
 
         Log.d("Request", Constants.url)
