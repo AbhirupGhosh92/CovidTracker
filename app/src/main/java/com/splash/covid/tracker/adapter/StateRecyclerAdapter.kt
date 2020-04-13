@@ -1,6 +1,12 @@
 package com.splash.covid.tracker.adapter
 
 import android.content.Context
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextUtils
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,12 +47,55 @@ class StateRecyclerAdapter(var stateListe: ArrayList<StateModel> = ArrayList(),v
 
         if(stateListe.isNullOrEmpty().not()) {
 
-                holder.dataBinding.areaText.text = stateListe[position].state
+
+            holder.dataBinding.areaText.text =  stateListe[position].state
+            holder.dataBinding.activeCount.text =  stateListe[position].active
+            if(stateListe[position].deltaconfirmed.isNullOrEmpty().not() && stateListe[position].deltaconfirmed != "0" ) {
+
+                var delta = "▲${stateListe[position].deltaconfirmed}"
+                var item = stateListe[position].confirmed
+                var span  = SpannableString(delta+item)
+                span.setSpan(RelativeSizeSpan(0.6f),0,delta.length, 0)
+
+
+                holder.dataBinding.totalCount.text = span
+            }
+            else
                 holder.dataBinding.totalCount.text = stateListe[position].confirmed
+
+            if(stateListe[position].deltarecovered.isNullOrEmpty().not() && stateListe[position].deltarecovered != "0") {
+
+
+                var delta = "▲${stateListe[position].deltarecovered}"
+                var item = stateListe[position].recovered
+                var span  = SpannableString(delta+item)
+                span.setSpan(RelativeSizeSpan(0.6f),0,delta.length, 0)
+
+
+                holder.dataBinding.recoveredCount.text = span
+
+            }
+            else
                 holder.dataBinding.recoveredCount.text = stateListe[position].recovered
+
+            if(stateListe[position].deltadeaths.isNullOrEmpty().not() && stateListe[position].deltadeaths != "0") {
+
+
+                var delta = "▲${stateListe[position].deltadeaths}"
+                var item = stateListe[position].deaths
+                var span  = SpannableString(delta+item)
+                span.setSpan(RelativeSizeSpan(0.6f),0,delta.length, 0)
+
+
+                holder.dataBinding.deathCount.text = span
+            }
+            else
                 holder.dataBinding.deathCount.text = stateListe[position].deaths
-                holder.dataBinding.activeCount.text = stateListe[position].active
-                if(distList[stateListe[position].state].isNullOrEmpty().not()) {
+
+
+
+
+            if(distList[stateListe[position].state].isNullOrEmpty().not()) {
                     holder.dataBinding.distRecycler.visibility = View.VISIBLE
                     holder.dataBinding.distRecycler.adapter =
                         DistrictRecyclerAdapter(distList[stateListe[position].state]!!)

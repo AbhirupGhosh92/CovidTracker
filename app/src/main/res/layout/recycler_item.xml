@@ -39,7 +39,7 @@
 
          android:gravity="center"
          android:textColor="@color/cofirmedColour"
-         android:textSize="13sp"
+         android:textSize="14sp"
          app:layout_constraintTop_toTopOf="@id/area_text"
          app:layout_constraintBottom_toBottomOf="@id/area_text"
          app:layout_constraintRight_toLeftOf="@id/recovered_count"/>
@@ -53,7 +53,7 @@
          android:gravity="center"
          android:text="324"
          android:textColor="@color/activeColour"
-         android:textSize="13sp"
+         android:textSize="14sp"
          app:layout_constraintBottom_toBottomOf="@id/area_text"
          app:layout_constraintRight_toRightOf="parent"
          app:layout_constraintTop_toTopOf="@id/area_text" />
@@ -67,7 +67,7 @@
          android:text="324"
          android:gravity="center"
          android:textColor="@color/recoveredColour"
-         android:textSize="13sp"
+         android:textSize="14sp"
          app:layout_constraintTop_toTopOf="@id/area_text"
          app:layout_constraintBottom_toBottomOf="@id/area_text"
          app:layout_constraintRight_toLeftOf="@id/death_count"/>
@@ -81,7 +81,7 @@
         android:text="324"
         android:gravity="center"
         android:textColor="@color/deadColour"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/area_text"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/area_text" />
