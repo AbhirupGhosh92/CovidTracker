@@ -53,7 +53,7 @@ object NetworkClient : CoroutineScope by MainScope() {
             .get()
             .build()
 
-        Log.d("Request", Constants.url)
+        Log.d("Request", Constants.graphUrl)
 
         launch(Dispatchers.IO) {
             var response: Response = client.newCall(request).execute()

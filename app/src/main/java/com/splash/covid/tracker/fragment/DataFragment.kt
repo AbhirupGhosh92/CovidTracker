@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -49,10 +50,10 @@ class DataFragment: Fragment(), View.OnClickListener {
 
         viewModel.refreshData(requireContext())
 
-        viewModel.getStateWiseFromCache(requireContext()).observe(viewLifecycleOwner, Observer {stateList ->
+        viewModel.getStateWiseFromCache(requireContext()).observe(context as LifecycleOwner, Observer {stateList ->
 
 
-            viewModel.getDistDataFromCache(requireContext()).observe(viewLifecycleOwner, Observer {distList ->
+            viewModel.getDistDataFromCache(requireContext()).observe(context as LifecycleOwner, Observer {distList ->
 
                 realTimeDataFragmentBinding.srl.isRefreshing = false
 
@@ -68,10 +69,22 @@ class DataFragment: Fragment(), View.OnClickListener {
 
         viewModel.getTotalValuesFromCache(requireContext()).observe(viewLifecycleOwner, Observer {
             Log.d("Response",it.toString())
+
             realTimeDataFragmentBinding.topMainCount.totalCount.text = it.confirmed
             realTimeDataFragmentBinding.topMainCount.recovCount.text = it.recovered
             realTimeDataFragmentBinding.topMainCount.deadCount.text = it.deaths
             realTimeDataFragmentBinding.topMainCount.activeCount.text = it.active
+
+
+            if(it.deltaconfirmed.isNullOrEmpty().not())
+                realTimeDataFragmentBinding.topMainCount.totalCountDelta.text = "+${it.deltaconfirmed}"
+
+            if(it.deltaconfirmed.isNullOrEmpty().not())
+                realTimeDataFragmentBinding.topMainCount.recovCountDelta.text = "+${it.deltarecovered}"
+
+            if(it.deltaconfirmed.isNullOrEmpty().not())
+                realTimeDataFragmentBinding.topMainCount.deadCountDelta.text = "+${it.deltadeaths}"
+
         })
     }
 

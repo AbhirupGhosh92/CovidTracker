@@ -9,13 +9,11 @@ import com.splash.covid.tracker.network.NetworkClient
 import com.splash.covid.tracker.repository.entity.DistrictEntity
 import com.splash.covid.tracker.repository.entity.GraphEntity
 import com.splash.covid.tracker.repository.entity.ResponseEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 
-object Repository {
+object Repository : CoroutineScope by MainScope() {
 
     fun getResponseFromCache(context : Context) : LiveData<JSONArray>
     {
@@ -33,12 +31,12 @@ object Repository {
     fun getGraphDataFromServer(context: Context)
     {
         NetworkClient.getGraphData().observe(context as LifecycleOwner, Observer {
-            GlobalScope.launch(Dispatchers.IO) {
+            launch(Dispatchers.IO) {
                 AppDatabase.getInstance(context).graphDao()
                     .insertGraphEntity(GraphEntity(response = JSONObject(it).getJSONArray("cases_time_series").toString()))
             }
 
-            GlobalScope.launch(Dispatchers.IO) {
+            launch(Dispatchers.IO) {
                 AppDatabase.getInstance(context).responseDao()
                     .insertResponseEntity(ResponseEntity(response = JSONObject(it).getJSONArray("statewise").toString()))
             }
@@ -48,7 +46,7 @@ object Repository {
     fun getDistFromServer(context: Context)
     {
         NetworkClient.getDistrictData().observe(context as LifecycleOwner, Observer {
-            GlobalScope.launch(Dispatchers.IO) {
+            launch(Dispatchers.IO) {
                 AppDatabase.getInstance(context).distDao()
                     .insertDistEntity(DistrictEntity(response = it))
             }
