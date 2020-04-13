@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="cofirmedColour">#ff073a</color>
+    <color name="cofirmedColourCard">#72FF073A</color>
     <color name="activeColour">#007bff</color>
     <color name="recoveredColour">#28a745</color>
     <color name="deadColour">#6c757d</color>
@@ -11,6 +12,7 @@
     <color name="darker_gray">#aaaaaa</color>
     <color name="red">#ff0000</color>
     <color name="baseColor">#7926AD</color>
+    <color name="baseColorDark">#530188</color>
     <color name="off_white">#F6F6F6</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
@@ -18,7 +20,7 @@
     <color name="background_gray">#f7f7f7</color>
     <color name="light_gray">#F4F8FB</color>
     <color name="dark_grey">#7D7D7D</color>
-
+    <color name="stateColourCard">#7C7D7D7D</color>
 
     <color name="red_color">#ff7f7f</color>
     <color name="blue_color">#1bb3f5</color>

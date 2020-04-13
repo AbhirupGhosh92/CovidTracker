@@ -1,5 +1,6 @@
 package com.splash.covid.tracker.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.splash.covid.tracker.R
 import com.splash.covid.tracker.activity.DashboardActivity
 import com.splash.covid.tracker.adapter.StateRecyclerAdapter
@@ -52,6 +54,8 @@ class DataFragment: Fragment(), View.OnClickListener {
 
             viewModel.getDistDataFromCache(requireContext()).observe(viewLifecycleOwner, Observer {distList ->
 
+                realTimeDataFragmentBinding.srl.isRefreshing = false
+
                 Log.d("Response",stateList.toString())
                 stateItemList.clear()
                 stateItemList.addAll(stateList.drop(1))
@@ -76,6 +80,31 @@ class DataFragment: Fragment(), View.OnClickListener {
         realTimeDataFragmentBinding.stateRecycler.adapter = StateRecyclerAdapter(stateItemList,distItemList)
         realTimeDataFragmentBinding.stateRecycler.layoutManager = LinearLayoutManager(requireContext())
         realTimeDataFragmentBinding.stateRecycler.itemAnimator = DefaultItemAnimator()
+        realTimeDataFragmentBinding.stateRecycler.isNestedScrollingEnabled = false
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            realTimeDataFragmentBinding.srl.setColorSchemeColors(resources.getColor(R.color.baseColor,null),resources.getColor(R.color.baseColorDark,null))
+        }
+
+        realTimeDataFragmentBinding.srl.setOnRefreshListener {
+            viewModel.refreshData(requireContext())
+        }
+
+
+        realTimeDataFragmentBinding.stateRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val topRowVerticalPosition =
+                    if (recyclerView == null || recyclerView.childCount == 0) 0 else recyclerView.getChildAt(
+                        0
+                    ).top
+                realTimeDataFragmentBinding.srl.isEnabled = topRowVerticalPosition >= 0
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
 
     private fun initListner() {

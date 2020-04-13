@@ -1,5 +1,6 @@
 package com.splash.covid.tracker.activity
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -15,6 +16,11 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.statusBarColor = resources.getColor(R.color.new_light_base_color,null)
+        }
+
         activityDashboardBinding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         init()
     }

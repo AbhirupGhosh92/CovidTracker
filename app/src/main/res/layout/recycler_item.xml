@@ -124,7 +124,7 @@
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:text="Count"
-                    android:textColor="@color/darker_gray"
+                    android:textColor="@color/deadColour"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="@id/area_text"
                     app:layout_constraintRight_toRightOf="parent"
