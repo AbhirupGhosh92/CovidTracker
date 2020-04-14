@@ -21,7 +21,7 @@
             app:tabPaddingBottom="2dp"
             app:tabPaddingStart="5dp"
             app:tabPaddingEnd="5dp"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabIndicatorHeight="3dp"
             >
         </com.google.android.material.tabs.TabLayout>

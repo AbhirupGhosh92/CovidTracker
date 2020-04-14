@@ -1,0 +1,27 @@
+[
+  {
+    "question" : "HELPLINE NUMBERS [BY STATE]",
+    "answer" : "HTTPS://WWW.MOHFW.GOV.IN/PDF/CORONVAVIRUSHELPLINENUMBER.PDF",
+    "browse" : true
+  },{
+  "question" : "MINISTRY OF HEALTH AND FAMILY WELFARE, GOV. OF INDIA",
+  "answer" : "HTTPS://WWW.MOHFW.GOV.IN/",
+  "browse" : true
+},{
+  "question" : "WHO : COVID-19 HOME PAGE",
+  "answer" : "HTTPS://WWW.WHO.INT/EMERGENCIES/DISEASES/NOVEL-CORONAVIRUS-2019",
+  "browse" : true
+},{
+  "question" : "CDC",
+  "answer" : "HTTPS://WWW.CDC.GOV/CORONAVIRUS/2019-NCOV/FAQ.HTML",
+  "browse" : true
+},{
+  "question" : "CROWDSOURCED LIST OF RESOURCES & ESSENTIALS FROM ACROSS INDIA",
+  "answer" : "HTTPS://BIT.LY/COVID19RESOURCELIST",
+  "browse" : true
+},{
+  "question" : "COVID-19 GLOBAL TRACKER",
+  "answer" : "HTTPS://CORONAVIRUS.THEBASELAB.COM/",
+  "browse" : true
+}
+]

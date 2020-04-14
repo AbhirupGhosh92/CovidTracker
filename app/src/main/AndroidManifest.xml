@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.splash.covid.tracker.activity.DashboardActivity"></activity>
+        <activity android:name="com.splash.covid.tracker.activity.DashboardActivity"/>
     </application>
 
 </manifest>
