@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CovidTracker</string>
+    <string name="app_name">Covid India Tracker</string>
     <string name="tracker_text">Covid-19\nTracker</string>
 
     <string name="total_text">Confirmed</string>
