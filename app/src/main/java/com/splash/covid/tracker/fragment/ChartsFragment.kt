@@ -1,31 +1,35 @@
 package com.splash.covid.tracker.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.splash.covid.tracker.R
 import com.splash.covid.tracker.activity.DashboardActivity
 import com.splash.covid.tracker.databinding.ChartsFragmentBinding
+import com.splash.covid.tracker.utils.AxisTextFormatter
+import com.splash.covid.tracker.utils.CustomMarker
 import com.splash.covid.tracker.viewmodels.GraphDataFragmentViewModel
-import com.jjoe64.graphview.GraphView
-import com.jjoe64.graphview.GridLabelRenderer
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
-import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
+import com.splash.covid.tracker.viewmodels.RealTimeDataFragmentViewModel
 
 
 class ChartsFragment: Fragment(), View.OnClickListener {
 
     private lateinit var chartsFragmentBinding: ChartsFragmentBinding
     private lateinit var viewModel : GraphDataFragmentViewModel
+    private lateinit var sharedViewModel: RealTimeDataFragmentViewModel
+    private  var total = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         chartsFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.charts_fragment, container, false)
@@ -37,6 +41,8 @@ class ChartsFragment: Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        total = arguments?.getBoolean("daily",false)!!
+        sharedViewModel = ViewModelProviders.of(requireActivity())[RealTimeDataFragmentViewModel::class.java]
         init()
     }
 
@@ -51,16 +57,24 @@ class ChartsFragment: Fragment(), View.OnClickListener {
 
             viewModel.formatData(it){dataArrayInfected,dataArrayRecovered,dataArrayDead,dataArrayInfectedDaily,dataArrayRecoveredDaily,dataArrayDeadDaily ->
 
-                graphFormatter( chartsFragmentBinding.graphInfected,dataArrayInfected,"inf")
-                graphFormatter( chartsFragmentBinding.graphRecovered,dataArrayRecovered,"rec")
-                graphFormatter( chartsFragmentBinding.graphDeadDaily,dataArrayDeadDaily,"ded_d")
+                if(!total) {
+                    graphFormatter(chartsFragmentBinding.graphInfected, dataArrayInfected, "inf")
+                    graphFormatter(chartsFragmentBinding.graphRecovered, dataArrayRecovered, "rec")
+                    graphFormatter(chartsFragmentBinding.graphDeadDaily, dataArrayDead, "ded")
+                }
+                else
+                {
+                    graphFormatter(chartsFragmentBinding.graphInfected, dataArrayInfectedDaily, "inf_d")
+                    graphFormatter(chartsFragmentBinding.graphRecovered, dataArrayRecoveredDaily, "rec_d")
+                    graphFormatter(chartsFragmentBinding.graphDeadDaily, dataArrayDeadDaily, "ded_d")
+                }
             }
         })
 
     }
 
     @SuppressLint("ResourceType")
-    private fun graphFormatter(graph : GraphView, dataArray : Array<DataPoint?>, type : String)
+    private fun graphFormatter(graph : LineChart, dataArray : Array<Entry?>, type : String)
     {
 
 
@@ -68,105 +82,180 @@ class ChartsFragment: Fragment(), View.OnClickListener {
         {
             "inf" ->
             {
-                graph.title = "Total Confirmed";
-                val series: LineGraphSeries<DataPoint?> = LineGraphSeries(dataArray)
-                series.setAnimated(true)
-                series.isDrawDataPoints = true
-                series.color = Color.parseColor(resources.getString(R.color.baseColor))
-                series.isDrawAsPath = true
-                series.title = "Total Confirmed"
-                graph.removeAllSeries()
-                graph.addSeries(series)
+
+                var dat = LineDataSet(dataArray.toList(), "Total Confirmed")
+                dat.setDrawValues(false)
+                dat.setDrawFilled(true)
+                dat.lineWidth = 3f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dat.fillColor = resources.getColor(R.color.cofirmedColour,null)
+                    dat.fillAlpha = resources.getColor(R.color.cofirmedColour,null)
+                    dat.circleColors = mutableListOf(resources.getColor(R.color.cofirmedColour,null))
+                    dat.color = resources.getColor(R.color.cofirmedColour,null)
+                    dat.setDrawCircleHole(false)
+                }
+
+                graph.data = LineData(dat)
+
+                graph.axisRight.isEnabled = false
+                graph.description.text = "Total Confirmed"
+
+
 
             }
 
             "rec" ->
             {
-                graph.title = "Total Recovered";
-                val series: LineGraphSeries<DataPoint?> = LineGraphSeries(dataArray)
-                series.setAnimated(true)
-                series.isDrawDataPoints = true
-                series.isDrawAsPath = true
-                series.color = Color.parseColor(resources.getString(R.color.colorPrimaryDark))
-                series.title = "Total Recovered"
-                graph.removeAllSeries()
-                graph.addSeries(series)
+                var dat = LineDataSet(dataArray.toList(), "Total Recovered")
+                dat.setDrawValues(false)
+                dat.setDrawFilled(true)
+                dat.lineWidth = 3f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dat.fillColor = resources.getColor(R.color.recoveredColour,null)
+                    dat.fillAlpha = resources.getColor(R.color.recoveredColour,null)
+                    dat.circleColors = mutableListOf(resources.getColor(R.color.recoveredColour,null))
+                    dat.color = resources.getColor(R.color.recoveredColour,null)
+                    dat.setDrawCircleHole(false)
+                }
+
+                graph.data = LineData(dat)
+                graph.description.text = "Total Recovered"
             }
 
             "ded" ->
             {
-                graph.title = "Total Dead";
-                val series: LineGraphSeries<DataPoint?> = LineGraphSeries(dataArray)
-                series.setAnimated(true)
-                series.isDrawDataPoints = true
-                series.isDrawAsPath = true
-                series.title = "Total Dead"
-                series.color = Color.parseColor(resources.getString(R.color.colorAccent))
-                graph.removeAllSeries()
-                graph.addSeries(series)
+                var dat = LineDataSet(dataArray.toList(), "Total Dead")
+                dat.setDrawValues(false)
+                dat.setDrawFilled(true)
+                dat.lineWidth = 3f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dat.fillColor = resources.getColor(R.color.deadColour,null)
+                    dat.fillAlpha = resources.getColor(R.color.deadColour,null)
+                    dat.circleColors = mutableListOf(resources.getColor(R.color.deadColour,null))
+                    dat.color = resources.getColor(R.color.deadColour,null)
+                    dat.setDrawCircleHole(false)
+                }
+
+                graph.data = LineData(dat)
+                graph.description.text = "Total Dead"
             }
 
             "inf_d" ->
             {
-                graph.title = "Daily Confirmed";
-                val series: LineGraphSeries<DataPoint?> = LineGraphSeries(dataArray)
-                series.setAnimated(true)
-                series.isDrawDataPoints = true
-                series.color = Color.parseColor(resources.getString(R.color.baseColor))
-                series.isDrawAsPath = true
-                series.title = "Daily Confirmed"
-                graph.removeAllSeries()
-                graph.addSeries(series)
+                var dat = LineDataSet(dataArray.toList(), "Daily Confirmed")
+                dat.setDrawValues(false)
+                dat.setDrawFilled(true)
+                dat.lineWidth = 3f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dat.fillColor = resources.getColor(R.color.cofirmedColour,null)
+                    dat.fillAlpha = resources.getColor(R.color.cofirmedColour,null)
+                    dat.circleColors = mutableListOf(resources.getColor(R.color.cofirmedColour,null))
+                    dat.color = resources.getColor(R.color.cofirmedColour,null)
+                    dat.setDrawCircleHole(false)
+                }
+
+                graph.data = LineData(dat)
+                graph.description.text = "Daily Confirmed"
 
             }
 
             "rec_d" ->
             {
-                graph.title = "Daily Recovered";
-                val series: LineGraphSeries<DataPoint?> = LineGraphSeries(dataArray)
-                series.setAnimated(true)
-                series.isDrawDataPoints = true
-                series.isDrawAsPath = true
-                series.color = Color.parseColor(resources.getString(R.color.colorPrimaryDark))
-                series.title = "Daily Recovered"
-                graph.removeAllSeries()
-                graph.addSeries(series)
+                var dat = LineDataSet(dataArray.toList(), "Daily Recovered")
+                dat.setDrawValues(false)
+                dat.setDrawFilled(true)
+                dat.lineWidth = 3f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dat.fillColor = resources.getColor(R.color.recoveredColour,null)
+                    dat.fillAlpha = resources.getColor(R.color.recoveredColour,null)
+                    dat.circleColors = mutableListOf(resources.getColor(R.color.recoveredColour,null))
+                    dat.color = resources.getColor(R.color.recoveredColour,null)
+                    dat.setDrawCircleHole(false)
+
+                }
+
+                graph.data = LineData(dat)
+                graph.description.text = "Daily Recovered"
             }
 
             "ded_d" ->
             {
-                graph.title = "Daily Dead";
-                val series: LineGraphSeries<DataPoint?> = LineGraphSeries(dataArray)
-                series.setAnimated(true)
-                series.isDrawDataPoints = true
-                series.isDrawAsPath = true
-                series.title = "Daily Dead"
-                series.color = Color.parseColor(resources.getString(R.color.colorAccent))
-                graph.removeAllSeries()
-                graph.addSeries(series)
+                var dat = LineDataSet(dataArray.toList(), "Daily Dead")
+                dat.setDrawValues(false)
+                dat.setDrawFilled(true)
+                dat.lineWidth = 3f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dat.fillColor = resources.getColor(R.color.deadColour,null)
+                    dat.fillAlpha = resources.getColor(R.color.deadColour,null)
+                    dat.circleColors = mutableListOf(resources.getColor(R.color.deadColour,null))
+                    dat.color = resources.getColor(R.color.deadColour,null)
+                    dat.setDrawCircleHole(false)
+                }
+
+                graph.data = LineData(dat)
+                graph.description.text = "Daily Dead"
             }
         }
 
-        // set date label formatter
-        graph.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(requireContext());
-        graph.gridLabelRenderer.numHorizontalLabels = 3; // only 4 because of the space
-        graph.gridLabelRenderer.numVerticalLabels = 3
-        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.HORIZONTAL
-        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
-        graph.gridLabelRenderer.isVerticalLabelsVisible = false
+        graph.marker = CustomMarker(requireContext(),R.layout.marker_layout)
 
-// set manual x bounds to have nice steps
-        graph.viewport.setMinX(dataArray.first()!!.x - 5.0)
-        graph.viewport.setMaxX(dataArray.last()!!.x + 25.0);
+        graph.onChartGestureListener = object : OnChartGestureListener{
+            override fun onChartGestureEnd(
+                me: MotionEvent?,
+                lastPerformedGesture: ChartTouchListener.ChartGesture?
+            ) {
 
-        graph.viewport.setMinY(dataArray.first()!!.y-10.0)
-        graph.viewport.setMaxY(dataArray.last()!!.y + 50.0)
+            }
 
-        graph.viewport.isXAxisBoundsManual = true;
-        graph.viewport.isYAxisBoundsManual = true;
-        graph.isCursorMode = true
+            override fun onChartFling(
+                me1: MotionEvent?,
+                me2: MotionEvent?,
+                velocityX: Float,
+                velocityY: Float
+            ) {
 
-        graph.gridLabelRenderer.setHumanRounding(false);
+            }
+
+            override fun onChartSingleTapped(me: MotionEvent?) {
+
+            }
+
+            override fun onChartGestureStart(
+                me: MotionEvent?,
+                lastPerformedGesture: ChartTouchListener.ChartGesture?
+            ) {
+
+            }
+
+            override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
+                sharedViewModel.swipeRefreshLayoutEnabled.invoke(graph.scaleX == 1.0f && graph.scaleY == 1.0f)
+            }
+
+            override fun onChartLongPressed(me: MotionEvent?) {
+
+            }
+
+            override fun onChartDoubleTapped(me: MotionEvent?) {
+                graph.resetZoom()
+                sharedViewModel.swipeRefreshLayoutEnabled.invoke(true)
+            }
+
+            override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
+                sharedViewModel.swipeRefreshLayoutEnabled.invoke(graph.viewPortHandler.isFullyZoomedOut)
+            }
+
+        }
+
+
+
+
+
+        val xAxis: XAxis = graph.xAxis
+        xAxis.labelCount = 6
+        xAxis.valueFormatter = AxisTextFormatter()
+        graph.setTouchEnabled(true)
+        graph.setPinchZoom(true)
+        graph.invalidate()
     }
 
 

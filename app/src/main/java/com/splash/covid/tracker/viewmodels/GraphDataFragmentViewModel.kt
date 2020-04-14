@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.github.mikephil.charting.data.Entry
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.splash.covid.tracker.repository.Repository
 import com.splash.covid.tracker.repository.models.GraphItem
-import com.jjoe64.graphview.series.DataPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -34,42 +34,42 @@ class GraphDataFragmentViewModel : ViewModel() {
         return liveData
     }
 
-    fun formatData(graphList : List<GraphItem>, sippet : (dataArrayInfected : Array<DataPoint?>,
-                                                          dataArrayRecovered : Array<DataPoint?>,
-                                                          dataArrayDead : Array<DataPoint?>,
-                                                          dataArrayInfectedDaily : Array<DataPoint?>,
-                                                          dataArrayRecoveredDaily : Array<DataPoint?>,
-                                                          dataArrayDeadDaily : Array<DataPoint?>
+    fun formatData(graphList : List<GraphItem>, sippet : (dataArrayInfected : Array<Entry?>,
+                                                          dataArrayRecovered : Array<Entry?>,
+                                                          dataArrayDead : Array<Entry?>,
+                                                          dataArrayInfectedDaily : Array<Entry?>,
+                                                          dataArrayRecoveredDaily : Array<Entry?>,
+                                                          dataArrayDeadDaily : Array<Entry?>
                                                           ) -> Unit)
     {
-        var dataListInfected = ArrayList<DataPoint>()
-        var dataListRecovered = ArrayList<DataPoint>()
-        var dataListDead = ArrayList<DataPoint>()
-        var dataListInfectedDaily = ArrayList<DataPoint>()
-        var dataListRecoveredDaily = ArrayList<DataPoint>()
-        var dataListDeadDaily = ArrayList<DataPoint>()
+        var dataListInfected = ArrayList<Entry>()
+        var dataListRecovered = ArrayList<Entry>()
+        var dataListDead = ArrayList<Entry>()
+        var dataListInfectedDaily = ArrayList<Entry>()
+        var dataListRecoveredDaily = ArrayList<Entry>()
+        var dataListDeadDaily = ArrayList<Entry>()
 
         graphList.forEach {
             var date = SimpleDateFormat("dd MMMM yyyy").parse("${it.date} ${Calendar.getInstance().get(
                 Calendar.YEAR)}")
 
-            dataListInfected.add(DataPoint(date,it.totalconfirmed?.toDouble()!!))
-            dataListRecovered.add(DataPoint(date,it.totalrecovered?.toDouble()!!))
-            dataListDead.add(DataPoint(date,it.totaldeceased?.toDouble()!!))
+            dataListInfected.add(Entry(date?.time?.toFloat()!!,it.totalconfirmed?.toFloat()!!))
+            dataListRecovered.add(Entry(date?.time?.toFloat()!!,it.totalrecovered?.toFloat()!!))
+            dataListDead.add(Entry(date?.time?.toFloat()!!,it.totaldeceased?.toFloat()!!))
 
-            dataListInfectedDaily.add(DataPoint(date,it.dailyconfirmed?.toDouble()!!))
-            dataListRecoveredDaily.add(DataPoint(date,it.dailyrecovered?.toDouble()!!))
-            dataListDeadDaily.add(DataPoint(date,it.dailydeceased?.toDouble()!!))
+            dataListInfectedDaily.add(Entry(date?.time?.toFloat()!!,it.dailyconfirmed?.toFloat()!!))
+            dataListRecoveredDaily.add(Entry(date?.time?.toFloat()!!,it.dailyrecovered?.toFloat()!!))
+            dataListDeadDaily.add(Entry(date?.time?.toFloat()!!,it.dailydeceased?.toFloat()!!))
 
         }
 
-        var dataArrayInfected = arrayOfNulls<DataPoint?>(dataListInfected.size)
-        var dataArrayRecovered = arrayOfNulls<DataPoint?>(dataListRecovered.size)
-        var dataArrayDead = arrayOfNulls<DataPoint?>(dataListDead.size)
+        var dataArrayInfected = arrayOfNulls<Entry?>(dataListInfected.size)
+        var dataArrayRecovered = arrayOfNulls<Entry?>(dataListRecovered.size)
+        var dataArrayDead = arrayOfNulls<Entry?>(dataListDead.size)
 
-        var dataArrayInfectedDaily = arrayOfNulls<DataPoint?>(dataListInfectedDaily.size)
-        var dataArrayRecoveredDaily = arrayOfNulls<DataPoint?>(dataListRecoveredDaily.size)
-        var dataArrayDeadDaily = arrayOfNulls<DataPoint?>(dataListDeadDaily.size)
+        var dataArrayInfectedDaily = arrayOfNulls<Entry?>(dataListInfectedDaily.size)
+        var dataArrayRecoveredDaily = arrayOfNulls<Entry?>(dataListRecoveredDaily.size)
+        var dataArrayDeadDaily = arrayOfNulls<Entry?>(dataListDeadDaily.size)
 
 
         dataListInfected.toArray(dataArrayInfected)

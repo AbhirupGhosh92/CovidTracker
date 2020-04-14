@@ -3,7 +3,13 @@
     "question" : "HELPLINE NUMBERS [BY STATE]",
     "answer" : "HTTPS://WWW.MOHFW.GOV.IN/PDF/CORONVAVIRUSHELPLINENUMBER.PDF",
     "browse" : true
-  },{
+  },
+  {
+    "question" : "COVID-19 INDIA OFFICIAL PAGE",
+    "answer" : "HTTPS://WWW.COVID19INDIA.ORG",
+    "browse" : true
+  },
+{
   "question" : "MINISTRY OF HEALTH AND FAMILY WELFARE, GOV. OF INDIA",
   "answer" : "HTTPS://WWW.MOHFW.GOV.IN/",
   "browse" : true

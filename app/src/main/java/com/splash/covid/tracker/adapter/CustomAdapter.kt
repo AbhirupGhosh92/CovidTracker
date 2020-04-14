@@ -1,5 +1,6 @@
 package com.splash.covid.tracker.adapter
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -23,9 +24,15 @@ class CustomAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapte
            }
           1 -> {
               fragment = ChartsFragment()
+              fragment.arguments = Bundle().apply {
+                  putBoolean("daily",false)
+              }
           }
            2-> {
                fragment = ChartsFragment()
+               fragment.arguments = Bundle().apply {
+                   putBoolean("daily",true)
+               }
            }
            3 -> {
                fragment = HelpfulLinksFragment()

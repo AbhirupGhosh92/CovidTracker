@@ -1,5 +1,7 @@
 package com.splash.covid.tracker.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +19,7 @@ import com.splash.covid.tracker.activity.DashboardActivity
 import com.splash.covid.tracker.adapter.CustomAdapter
 import com.splash.covid.tracker.databinding.DashboardFragmentBinding
 import com.splash.covid.tracker.viewmodels.RealTimeDataFragmentViewModel
+import java.lang.Exception
 
 class DashboardFragment: Fragment(), View.OnClickListener {
 
@@ -100,7 +103,6 @@ class DashboardFragment: Fragment(), View.OnClickListener {
         viewModel.swipeRefreshLayoutEnabled = {
             dashboardFragmentBinding.srl.isEnabled = it
         }
-
     }
 
     private fun initListner() {}

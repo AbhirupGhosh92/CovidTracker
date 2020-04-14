@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -17,6 +18,7 @@ import com.splash.covid.tracker.R
 import com.splash.covid.tracker.adapter.HelpfulLinksAdapter
 import com.splash.covid.tracker.databinding.HelpfulLinksFragmentBinding
 import com.splash.covid.tracker.repository.models.QuestionModel
+import com.splash.covid.tracker.viewmodels.RealTimeDataFragmentViewModel
 import java.lang.Exception
 
 class HelpfulLinksFragment : Fragment() {
@@ -24,6 +26,7 @@ class HelpfulLinksFragment : Fragment() {
     private lateinit var dataBinding : HelpfulLinksFragmentBinding
     private var questioList = ArrayList<QuestionModel>()
     private lateinit var currentContext : Context
+    private lateinit var viewModel : RealTimeDataFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +35,8 @@ class HelpfulLinksFragment : Fragment() {
     ): View?
 
     {
+        viewModel = ViewModelProviders.of(requireActivity()).get(RealTimeDataFragmentViewModel::class.java)
+
         currentContext = requireContext()
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.helpful_links_fragment,container,false)
 
@@ -54,14 +59,13 @@ class HelpfulLinksFragment : Fragment() {
 
         dataBinding.rvUsefulLinnks.adapter = HelpfulLinksAdapter(questioList){
             val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(it)
+            i.data = Uri.parse(it.toLowerCase())
             try {
-                activity?.startActivity(i)
+                startActivity(i)
             }
             catch (e : Exception)
             {
                 e.printStackTrace()
-
             }
         }
         dataBinding.rvUsefulLinnks.layoutManager = LinearLayoutManager(currentContext)
