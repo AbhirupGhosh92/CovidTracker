@@ -53,10 +53,6 @@ class ChartsFragment: Fragment(), View.OnClickListener {
 
                 graphFormatter( chartsFragmentBinding.graphInfected,dataArrayInfected,"inf")
                 graphFormatter( chartsFragmentBinding.graphRecovered,dataArrayRecovered,"rec")
-                graphFormatter( chartsFragmentBinding.graphDead,dataArrayDead,"ded")
-
-                graphFormatter( chartsFragmentBinding.graphInfectedDaily,dataArrayInfectedDaily,"inf_d")
-                graphFormatter( chartsFragmentBinding.graphRecoveredDaily,dataArrayRecoveredDaily,"rec_d")
                 graphFormatter( chartsFragmentBinding.graphDeadDaily,dataArrayDeadDaily,"ded_d")
             }
         })

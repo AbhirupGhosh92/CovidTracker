@@ -13,6 +13,8 @@ import kotlin.Exception
 
 class RealTimeDataFragmentViewModel : ViewModel() {
 
+    var swipeRefreshLayoutEnabled : (enabled : Boolean) -> Unit = {}
+
     fun refreshData(context: Context)
     {
         try {

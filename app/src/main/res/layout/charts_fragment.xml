@@ -24,29 +24,6 @@
         android:layout_marginBottom="5dp"
         android:id="@+id/graph_recovered" />
 
-
-    <com.jjoe64.graphview.GraphView
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/graph_dead" />
-
-    <com.jjoe64.graphview.GraphView
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/graph_infected_daily" />
-
-    <com.jjoe64.graphview.GraphView
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/graph_recovered_daily" />
-
-
     <com.jjoe64.graphview.GraphView
         android:layout_weight="1"
         android:layout_width="match_parent"

@@ -23,12 +23,18 @@
             app:tabPaddingEnd="5dp"
             app:tabMode="fixed"
             app:tabIndicatorHeight="3dp"
-            />
+            >
+        </com.google.android.material.tabs.TabLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_main"
             android:background="@color/new_light_base_color"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

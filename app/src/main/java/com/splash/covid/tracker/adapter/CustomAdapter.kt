@@ -9,21 +9,24 @@ import com.splash.covid.tracker.fragment.DataFragment
 class CustomAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager,
     FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    private val nums = arrayListOf("Real Time Data","Charts")
+    private val nums = arrayListOf("Real Time Data","Total Graph","Daily Graph")
 
 
     override fun getItem(position: Int): Fragment {
         var fragment : Fragment? = null
 
-        if(position == 0)
-        {
-            fragment = DataFragment()
-        }
-        else
-        {
-            fragment = ChartsFragment()
-        }
-        return fragment
+       when(position) {
+          0 -> {
+               fragment = DataFragment()
+           }
+          1 -> {
+              fragment = ChartsFragment()
+          }
+           2-> {
+               fragment = ChartsFragment()
+           }
+       }
+        return fragment!!
     }
 
     override fun getCount(): Int {
